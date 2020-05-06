@@ -19,7 +19,6 @@ class CameraViewController: UIViewController {
     @IBOutlet var recordButton: UIButton!
     @IBOutlet var cameraView: CameraPreviewView!
 
-
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
@@ -27,7 +26,8 @@ class CameraViewController: UIViewController {
 		cameraView.videoPlayerView.videoGravity = .resizeAspectFill
         setUpCaptureSession()
 	}
-
+    
+    // Use viewWillAppear so that before the view is displayed, we give the system time to load in video frames
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         captureSession.startRunning()
@@ -70,7 +70,7 @@ class CameraViewController: UIViewController {
 
         captureSession.commitConfiguration()
         cameraView.session = captureSession
-        // TODO: Start/Stop the session
+        // TODO: Start/Stop session
     }
 
     private func bestCamera() -> AVCaptureDevice {
@@ -129,6 +129,7 @@ class CameraViewController: UIViewController {
         topRect.origin.y = view.layoutMargins.top
         playerView.frame = topRect
         view.addSubview(playerView) // FIXME: Don't add every time we play
+        
         player.play()
     }
 }
@@ -146,7 +147,7 @@ extension CameraViewController: AVCaptureFileOutputRecordingDelegate {
     }
 
     func fileOutput(_ output: AVCaptureFileOutput, didStartRecordingTo fileURL: URL, from connections: [AVCaptureConnection]) {
-        print("Started recording \(fileURL)")
+        print("startedRecording: \(fileURL)")
         updateViews()
     }
 }
